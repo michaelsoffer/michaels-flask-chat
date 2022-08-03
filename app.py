@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, send
 
 app = Flask(__name__)   # initialize flask app
-# app.config['SECRET'] = "secretkey"
+app.config['SECRET'] = "secretkey"
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
