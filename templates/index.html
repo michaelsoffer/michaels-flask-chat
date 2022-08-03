@@ -20,7 +20,7 @@
 <body style="text-align:center; font-size:14pt;">
 <script type="text/javascript">
     $(document).ready(function() {
-        // create socket
+        // create socket, connects to python backend which is running on port 5000
         var socket = io.connect("http://localhost:5000");
 
         // when connect, send to socket that user connected
