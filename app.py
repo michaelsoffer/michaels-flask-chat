@@ -10,10 +10,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # listen for 'message' event
 @socketio.on('message')
 def handle_message(msg):
-    print("Received message: " + msg)
+    print("Received message: " + msg)   # tell console that a message was received
 
-    if msg != "User connected!":
-        send(msg, broadcast=True)
+    if msg != "User connected!":        # don't broadcast 'User connected!' message to screen, just console
+        send(msg, broadcast=True)       # broadcast message to all users connected
 
 @app.route('/')         # render index html page at root '/'
 def index():
