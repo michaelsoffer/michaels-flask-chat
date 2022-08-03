@@ -30,7 +30,18 @@
 
         // on message, add a p tag to div#messages field
         socket.on('message', function(msg) {
+            // add is typing... notification
+            if (msg.includes("is typing...")) {
+                if ($('#typingAlerts').children().length == 0) {
+                    $('#typingAlerts').append($('<p>').text(msg));
+                }
+                return;
+            }
+
             $('#messages').append($('<p>').text(msg));
+
+            // clear "is typing..." alert
+            $('#typingAlerts').empty();
         });
 
         // triggers when form submitted
@@ -44,21 +55,14 @@
             
             // clear message box after send
             $('#message').val('');
-
-            // clear "is typing..." alert
-            $('#typingAlerts').empty();
+           
         });
 
         $('#message').on('input', function() {
-            // if there is already a "typing..." notification on screen, then don't put another one
-            if ($('#typingAlerts').children().length == 0) {
-
-                // if username is blank, then Anonymous user is typing
-                if ($('#username').val() == "") {
-                    $('#typingAlerts').append($('<p>').text("Anonymous user is typing..."));
-                } else $('#typingAlerts').append($('<p>').text($('#username').val() + " is typing..."));
-            
-            }
+            // if username is blank, then Anonymous user is typing
+            if ($('#username').val() == "") {
+                socket.send("Anonymous user is typing...");
+            } else socket.send(($('#username').val() + " is typing..."));
         });
     });
     

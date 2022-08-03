@@ -4,9 +4,11 @@ from flask_socketio import SocketIO, send
 app = Flask(__name__)   # initialize flask app
 app.config['SECRET'] = "secretkey"
 
+# instantiate socketio passing in app
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-@socketio.on('message') # socketio event handler on 'message', function will print message essentially
+# listen for 'message' event
+@socketio.on('message')
 def handle_message(msg):
     print("Received message: " + msg)
 
