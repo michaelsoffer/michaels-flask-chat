@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    
+    <!-- SocketIO CDN -->
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js" integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="style.css">
+
+    <title>Flask Chat App</title>
+</head>
+<body style="text-align:center; font-size:14pt;">
+<script type="text/javascript">
+    $(document).ready(function() {
+        var socket = io.connect("http://localhost:5000");
+
+        socket.on('connect', function() {
+            socket.send("User connected!");
+        });
+
+        socket.on('message', function(msg) {
+            $('#messages').append($('<p>').text(msg));
+        });
+
+        $('#form').submit(function(e) {
+            // if username is blank send as "Anonymous", else send as user
+            e.preventDefault(); // prevent form from clearing it's fields after submitting
+
+            if ($('#username').val() == "") {
+                socket.send("Anonymous: " + $('#message').val())
+            } else socket.send($('#username').val() + ": " + $('#message').val());
+            
+            // clear message box after send
+            $('#message').val('');
+
+            // clear "is typing..." alert
+            $('#typingAlerts').empty();
+        });
+
+        $('#message').on('input', function() {
+            // if there is already a "typing..." notification on screen, then don't put another one
+            if ($('#typingAlerts').children().length == 0) {
+
+                // if username is blank, then Anonymous user is typing
+                if ($('#username').val() == "") {
+                    $('#typingAlerts').append($('<p>').text("Anonymous user is typing..."));
+                } else $('#typingAlerts').append($('<p>').text($('#username').val() + " is typing..."));
+            
+            }
+        });
+    });
+    
+</script>
+
+<div id="messages" style="margin: 0 auto; width: 60%; text-align:left;">
+    <h2>Chats:</h2>
+</div>
+
+<form id="form" class="form-group">
+    <input type="text" id="username" placeholder="Enter Username">
+    <input onChange=typingAlert type="text" id="message" placeholder="Enter Message">
+    <button type="submit" class="btn btn-primary" id="sendBtn">Send Message</button>
+</form>
+
+<div id="typingAlerts">
+
+</div>
+
+</body>
+</html>
