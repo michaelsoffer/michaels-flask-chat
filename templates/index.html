@@ -20,16 +20,20 @@
 <body style="text-align:center; font-size:14pt;">
 <script type="text/javascript">
     $(document).ready(function() {
+        // create socket
         var socket = io.connect("http://localhost:5000");
 
+        // when connect, send to socket that user connected
         socket.on('connect', function() {
             socket.send("User connected!");
         });
 
+        // on message, add a p tag to div#messages field
         socket.on('message', function(msg) {
             $('#messages').append($('<p>').text(msg));
         });
 
+        // triggers when form submitted
         $('#form').submit(function(e) {
             // if username is blank send as "Anonymous", else send as user
             e.preventDefault(); // prevent form from clearing it's fields after submitting

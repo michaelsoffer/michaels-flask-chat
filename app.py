@@ -13,7 +13,6 @@ def handle_message(msg):
     if msg != "User connected!":
         send(msg, broadcast=True)
 
-
 @app.route('/')         # render index html page at root '/'
 def index():
     return render_template("index.html")
